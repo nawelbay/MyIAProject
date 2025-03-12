@@ -10,25 +10,25 @@ from sklearn.datasets import load_iris
 
 iris = load_iris()
 
-# Chargement du modèle
+# Model Loading
 loaded_model = load('./app/logreg.joblib')
 
-# Création d'une nouvelle instance fastAPI
+# An instance of the fastAPI
 app = FastAPI()
 
-# Définir un objet (une classe) pour réaliser des requêtes
+# Define request class
 class request_body(BaseModel):
     sepal_length : float
     sepal_width : float
     petal_length : float
     petal_width : float
 
-# Definition du chemin du point de terminaison (API)
+# End point preparation
 @app.post("/predict") # local : http://127.0.0.1:8000/predict
 
-# Définition de la fonction de prédiction
+# Prediction function
 def predict(data : request_body):
-    # Nouvelles données sur lesquelles on fait la prédiction
+    # Formating the data
     new_data = [[
         data.sepal_length,
         data.sepal_width,
@@ -36,8 +36,8 @@ def predict(data : request_body):
         data.petal_width
     ]]
 
-    # Prédiction
+    # Prediction
     class_idx = loaded_model.predict(new_data)[0]
 
-    # Je retourne le nom de l'espèce iris
+    # iris name_class is returned
     return {'class' : iris.target_names[class_idx]}
